@@ -826,13 +826,20 @@ error:
 	return rc;
 }
 
-int dsi_panel_set_backlight(struct dsi_panel *panel, u32 bl_lvl)
+int dsi_panel_set_backlight(struct dsi_panel *panel, u32 bl_lvl_bak)
 {
 	int rc = 0;
+	u32 bl_lvl=0;
 	struct dsi_backlight_config *bl = &panel->bl_config;
 
 	if (panel->host_config.ext_bridge_mode)
 		return 0;
+		
+	if(bl_lvl_bak > 4095){
+	    bl_lvl = 4095;
+	}else{
+	    bl_lvl = bl_lvl_bak;
+	}
 
 	NUBIA_DEBUG("backlight type:%d lvl:%d\n", bl->type, bl_lvl);
 	switch (bl->type) {
