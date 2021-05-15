@@ -67,6 +67,28 @@
 		qcom,mdss-pan-physical-width-dimension = <72>;
 		qcom,mdss-pan-physical-height-dimension = <156>;
 
+		qcom,disp-fod-dim-lut = <
+			/* brightness, alpha */
+			17	0xEB
+			32	0xE6
+			48	0xE3
+			60	0xE0
+			136	0xD2
+			266	0xC0
+			436	0xB1
+			656	0x9F
+			972	0x8F
+			1284	0x80
+			1664	0x70
+			2086	0x60
+			2534	0x50
+			3000	0x40
+			3540	0x30
+			4000	0x24
+			4095	0x21
+		>;
+
+
 		qcom,mdss-dsi-display-timings {
 			timing@0 {
 				qcom,mdss-dsi-panel-framerate = <90>;
