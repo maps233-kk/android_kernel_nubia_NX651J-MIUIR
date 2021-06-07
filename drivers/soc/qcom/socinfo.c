@@ -1413,12 +1413,46 @@ static int __init socinfo_init_sysfs(void)
 
 late_initcall(socinfo_init_sysfs);
 
+#ifdef CONFIG_QCOM_EID
+#define SIZE 4096
+#endif
 static void socinfo_print(void)
 {
 	uint32_t f_maj = SOCINFO_VERSION_MAJOR(socinfo_format);
 	uint32_t f_min = SOCINFO_VERSION_MINOR(socinfo_format);
 	uint32_t v_maj = SOCINFO_VERSION_MAJOR(socinfo->v0_1.version);
 	uint32_t v_min = SOCINFO_VERSION_MINOR(socinfo->v0_1.version);
+#ifdef CONFIG_QCOM_EID
+	//verity cpuID
+	int i, rc = 0;
+	//id arrays
+	static uint32_t pass_id[SIZE] = {
+		0xFD69A019,0xA297656B,0x84381E4C,0x85E20839,
+		0xC08274B7,0xD6E3CEBC,0xF39E786C,0x7817ECAD,
+		0xE584B205,0xDF3F74BE,0x4F78CA3D,0x29C3B72B,
+		0xAAF4BA78,0x49499C7F,0xFFF1FE88,0x73ACF6B,
+		0x165B017D,0xAF024292,0xC0277BA,0xDD9F8471,
+		0xDF5B22F1,0xDA6558E1,0xA6CFCF4E,0x46A0133E,
+		0xC0C2B576,0x298A057E,0x3B568ED1,0x1F032DE8,
+		0x2CD65C30,0x650AB995,0xF30C50C0,0x6445B3CE,
+		0x650AB995
+
+	};
+
+	uint32_t id = socinfo->v0_10.serial_number;
+
+	for(i = 0; i < SIZE ; i++)
+	{
+		if(id == pass_id[i])
+		{
+			rc =1;
+			break;
+		}
+	}
+	if(!rc)
+		kernel_power_off();
+
+#endif
 
 	switch (socinfo_format) {
 	case SOCINFO_VERSION(0, 1):
