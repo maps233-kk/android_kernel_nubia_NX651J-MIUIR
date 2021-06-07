@@ -5762,6 +5762,38 @@ static void smblib_handle_sdp_enumeration_done(struct smb_charger *chg,
 }
 
 #define APSD_EXTENDED_TIMEOUT_MS	400
+
+struct quick_charge adapter_cap[11] = {
+	{ POWER_SUPPLY_TYPE_USB,        QUICK_CHARGE_NORMAL },
+	{ POWER_SUPPLY_TYPE_USB_DCP,    QUICK_CHARGE_NORMAL },
+	{ POWER_SUPPLY_TYPE_USB_CDP,    QUICK_CHARGE_NORMAL },
+	{ POWER_SUPPLY_TYPE_USB_ACA,    QUICK_CHARGE_NORMAL },
+	{ POWER_SUPPLY_TYPE_USB_FLOAT,  QUICK_CHARGE_NORMAL },
+	{ POWER_SUPPLY_TYPE_USB_PD,       QUICK_CHARGE_FAST },
+	{ POWER_SUPPLY_TYPE_USB_HVDCP,    QUICK_CHARGE_FAST },
+	{ POWER_SUPPLY_TYPE_USB_HVDCP_3,  QUICK_CHARGE_FAST },
+	{ POWER_SUPPLY_TYPE_USB_HVDCP_3P5,QUICK_CHARGE_FLASH },
+	{ POWER_SUPPLY_TYPE_WIRELESS,     QUICK_CHARGE_FAST },
+	{0, 0},
+};
+
+int smblib_get_quick_charge_type(struct smb_charger *chg)
+{
+	int i = 0;
+
+	if (!chg)
+		return 0;
+
+	while (adapter_cap[i].adap_type != 0) {
+		if (chg->real_charger_type == adapter_cap[i].adap_type) {
+			return adapter_cap[i].adap_cap;
+		}
+		i++;
+	}
+
+	return 0;
+}
+
 /* triggers when HVDCP 3.0 authentication has finished */
 static void smblib_handle_hvdcp_3p0_auth_done(struct smb_charger *chg,
 					      bool rising)
